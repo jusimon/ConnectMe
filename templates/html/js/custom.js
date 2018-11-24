@@ -1,137 +1,229 @@
 /*
 This file contains all the custom code for ConnectMe and will be used for ajax calls
 */
+$(document).ready(function() {
 
-$(document).ready(function(){
+if ( $.cookie('token') && $.cookie('username'))
+  {
+   console.log($.cookie('token'));
+   console.log($.cookie('username'));
+   $("#loginshow").hide();
+   $("#loginhide").show();
+   $("#uname").html(" " + $.cookie('username'));
+  }
+else
+ {
+  console.log($.cookie('username'));
+  $("#loginshow").show();
+  $("#loginhide").hide();
+ }
 
-  /* Following event handles tenancy creation */
-
-$.ajaxSetup({
-	headers:{
-        	'Authorization': "JWT " + $.cookie('token')
-   	 }
+$("#logout").click(function() {
+deleteCookie();
+window.location.href = "index.html";
 });
 
-    $("#tenancyform").submit(function(event) {
-     /* stop form from submitting normally */
-      event.preventDefault();
-     $.ajax({
-          type: "POST",
-          url: "/api/tenancy",
-         // contentType: 'application/json',
-          data: $('#tenancyform').serialize(),
-          success: checkSuccess,
-          error: checkError
-       });
-   });
+  $.ajaxSetup({
+    headers: {
+      'Authorization': "JWT " + $.cookie('token')
+    }
+});
+
+$("#tenancyform").submit(function(event) {
+    /* stop form from submitting normally */
+    event.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "/api/tenancy",
+      // contentType: 'application/json',
+      data: $('#tenancyform').serialize(),
+      success: checkSuccess,
+      error: checkError
+    });
+ });
 
 
   /* Following function handles Jwt token access  */
 
-    $("#loginform").submit(function(event) {
-     /* stop form from submitting normally */
-      event.preventDefault();
-
-     var _data={
-      username: $('#username').val(),
-      password: $('#password').val()
-     }
-
-/*
-           var mapobj = {username:"username",password:"password"};
-   	   var _str =  $('#loginform').serialize();
-           var _data;
-   	  _data= genKeyPair(_str, mapobj);
-    	  console.log({ _data });
-         _data = {"username" : "testuser@testmail.com", "password": "test"};
-*/
-      console.log(_data);
-
-    $.ajax({
-          type: "POST",
-          url: "/auth",
-          contentType: 'application/json',
-          data:JSON.stringify(
-          { 
-          "username": "paramdeep.saini@sjsu.edu",
-          "password": "welcome1" 
-          }),
-          success: getToken,
-          error: checkError
-       });
+  $("#loginform").submit(function(event) {
+    /* stop form from submitting normally */
+     event.preventDefault();
+     var frmdata =  $('#loginform').serialize();
+     var res = frmdata.split("=");
+     passwd=res[2];
+     var endloc = res[1].search( /&/i );
+     var uname = res[1].substring(0, endloc);
+     var __data = uname.replace(/%40/g, "@");
+     uname = __data;
+     console.log(uname);
+     var str1 = '"{\\n\\\"username\\": \\"'+uname+'\\"'+', \\n\\"password\\": \\"'+passwd+'\\"\\n}"'
+     console.log(str1);
+     var req = $.ajax({
+     type: "POST",
+     url: "/auth",
+     contentType: 'application/json',
+     data: eval('"{\\n\\\"username\\": \\"'+uname+'\\"'+', \\n\\"password\\": \\"'+passwd+'\\"\\n}"')
+     });
+    req.done(getToken);
+    req.done(getUsername(uname));
+    req.fail(checkError);
+    req.fail(deleteCookie);
+    req.complete(checkLoggedIn);
    });
-
-
-  /* Following event handles is for testing the cookie */
-
-    $("#testbutton").click(function() {
-     /* stop form from submitting normally */
-     $.ajax({
-          type: "GET",
-          url: "/api/items",
-         // contentType: 'application/json',
-          success: checkSuccess,
-          error: checkError
-       });
-   });
-
 });
 
 
 
-function twitterme()
-{
-alert ("I am in twitterme");
+function twitterme() {
+  alert("I am in twitterme");
 }
 
-function resetpassword()
-{
-alert ("I am in resetpassword");
-}
-
-
-function registerme()
-{
-alert ("I am in registerme");
+function resetpassword() {
+  alert("I am in resetpassword");
 }
 
 
-function checkSuccess(data, textStatus, XMLHttpRequest)
-{
-console.log(data);
-console.log(textStatus);
+function registerme() {
+  alert("I am in registerme");
+}
+
+
+function checkSuccess(data, textStatus, XMLHttpRequest) {
+  console.log(data);
+  console.log(textStatus);
 }
 
 function getToken(response)
 {
+  if (response['access_token'])
+  {
   var jwt_token = response['access_token'];
   var token = jwt_token;
   console.log(token);
-  console.log(response);
   $.cookie('token', token);
- // window.location.href = "index.html";
+  console.log(response);
+  }
 }
 
-function checkError(XMLHttpRequest, textStatus, errorThrown)
+function getUsername(uname)
 {
- alert("I am in checkError");
- alert(textStatus,errorThrown);
+  console.log(uname);
+  $.cookie('username', uname);
 }
 
+function checkError(response) {
+  var errordesc;
+  var errorcode;
 
-function genKeyPair(_str,mapObj){
-       var _data = {};
-       console.log(_str);
-      _data = _str.replace(/&/g,", ");
-      console.log(_data);
-      _str = _data.replace(/=/g,": ");
-      console.log(_str);
-       _data = _str.replace(/%40/g,"@");
-       _str = _data;
-       console.log(_str);
-    var re = new RegExp(Object.keys(mapObj).join("|"),"gi");
-    
-    return _str.replace(re, function(matched){
-        return mapObj[matched];
-    });
+  if (response.responseJSON['description'])
+  {
+    errordesc = response.responseJSON['description'];
+  }
+  else
+  {
+    errordesc = "Unkown Error Occurred";
+  }
+  if (response.responseJSON['status_code'])
+  {
+    errorcode = response.responseJSON['status_code'];
+  }
+  else
+  {
+      errorcode = "Please try Again!";
+  }
+
+  alert("Login Failed :" + " " + errordesc + " - " + errorcode);
+  deleteCookie();
+  console.log(response);
+}
+
+function checkLoggedIn()
+{
+if ($.cookie('token') && $.cookie('username'))
+{
+ $.ajaxSetup({
+    headers: {
+      'Authorization': "JWT " + $.cookie('token')
+    }
+  });
+ uname = $.cookie('username');
+ var req = $.ajax({
+    type: "GET",
+    url: "/api/usermgmt",
+    dataType: "json",
+    data:
+    {
+      "username": uname,
+      "querytype": "cookie"
+    }
+ });
+ req.done(setCookie);
+ req.fail(checkError);
+ req.complete(checkCookie);
+ // alert("I am in Logged In");
+ window.location.href = "index.html";
+ }
+else
+ {
+  window.location.href = "login.html";
+ }
+}
+
+function deleteCookie()
+{
+  var status = 1;
+    if ($.cookie('token'))
+      $.cookie("token", null, { path: '/' });
+    if ($.cookie('username'))
+      $.cookie("username", null, { path: '/' });
+    if ($.cookie('firstname'))
+        $.cookie("firstname", null, { path: '/' });
+    if ($.cookie('lastname'))
+        $.cookie("lastname", null, { path: '/' });
+    if ($.cookie('designation'))
+        $.cookie("designation", null, { path: '/' });
+    if ($.cookie('tenancy_id'))
+        $.cookie("tenancy_id", null, { path: '/' });
+    if ($.cookie('role'))
+        $.cookie("role", null, { path: '/' });
+}
+
+function setCookie(response)
+{
+console.log(response);
+var firstname;
+var lastname;
+var role;
+var designation;
+var tenancy_id;
+obj = JSON.parse(response);
+// alert("I am inside setCookie1");
+$.each(obj,function(i,item){
+  firstname=item.first_name;
+  lastname=item.last_name;
+  role=item.role;
+  designation=item.designation;
+  tenancy_id=item.tenancy_id;
+});
+
+console.log(firstname + ' ' + lastname + ' ' + role + ' ' + designation + ' ' + tenancy_id)
+$.cookie('firstname', firstname);
+$.cookie('lastname', lastname);
+$.cookie('designation', designation);
+$.cookie('tenancy_id', tenancy_id);
+$.cookie('role', role);
+alert("Login Sucessfull!");
+}
+
+function checkCookie()
+{
+  var status = 1;
+    if ($.cookie('token') && $.cookie('username') && $.cookie('firstname')  && $.cookie('lastname') && $.cookie('designation') && $.cookie('tenancy_id') && $.cookie('role')) {
+      console.log('All the Cooikes are set')
+  }
+    else {
+      deleteCookie();
+      alert("Error Occurred in Login, Please try Again");
+      window.location.href = "login.html";
+    }
 }

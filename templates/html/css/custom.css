@@ -43,6 +43,15 @@
     font-style: normal;
 }
 
-#hide {
+#loginhide {
     display: none;
 }
+
+#loginshow {
+    display: none;
+}
+
+#useradminstyle {
+    display: none;
+}
+

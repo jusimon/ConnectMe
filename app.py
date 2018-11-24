@@ -15,7 +15,7 @@ api = Api(api_bp)
 
 api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
-api.add_resource(UserRegister, '/register')
+api.add_resource(UserRegister, '/usermgmt')
 api.add_resource(UserTenancy, '/tenancy')
 
 #if __name__ == '__main__':
