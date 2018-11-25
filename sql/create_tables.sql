@@ -14,7 +14,7 @@ CREATE TABLE `mysql-prod`.`corp_tenancy_user_tab` (
   `first_name` VARCHAR(40) NULL,
   `last_name` VARCHAR(40) NULL,
   `email_id` VARCHAR(40) NOT NULL,
-  `password` VARCHAR(40) NOT NULL,
+  `password` VARCHAR(128) NOT NULL,
   `role` VARCHAR(15) NOT NULL,
   `created_on` DATETIME NOT NULL,
   `last_login` DATETIME NULL,
