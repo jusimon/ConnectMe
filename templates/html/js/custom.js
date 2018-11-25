@@ -32,15 +32,14 @@ window.location.href = "index.html";
 $("#tenancyform").submit(function(event) {
     /* stop form from submitting normally */
     event.preventDefault();
-    $.ajax({
+    var tenancy_req=$.ajax({
       type: "POST",
       url: "/api/tenancy",
-      // contentType: 'application/json',
       data: $('#tenancyform').serialize(),
-      success: checkSuccess,
-      error: checkError
     });
- });
+    tenancy_req.done(tenancySuccess);
+    tenancy_req.fail(tenancyError);
+  });
 
 
   /* Following function handles Jwt token access  */
@@ -87,12 +86,6 @@ function registerme() {
   alert("I am in registerme");
 }
 
-
-function checkSuccess(data, textStatus, XMLHttpRequest) {
-  console.log(data);
-  console.log(textStatus);
-}
-
 function getToken(response)
 {
   if (response['access_token'])
@@ -109,6 +102,21 @@ function getUsername(uname)
 {
   console.log(uname);
   $.cookie('username', uname);
+}
+
+function tenancySuccess(response){
+  alert("Registeration Successfull!:");
+  window.location.href = "login.html";
+}
+
+function tenancyError(response) {
+  var desc;
+  var retcode;
+
+ console.log(response);
+  alert("Registeration Failed:" + " " + desc + " - " + retcode);
+  console.log(response);
+  document.getElementById("tenancyform").reset();
 }
 
 function checkError(response) {
@@ -132,9 +140,10 @@ function checkError(response) {
       errorcode = "Please try Again!";
   }
 
-  alert("Login Failed :" + " " + errordesc + " - " + errorcode);
+  alert("Login Failed:" + " " + errordesc + " - " + errorcode);
   deleteCookie();
   console.log(response);
+  document.getElementById("loginform").reset();
 }
 
 function checkLoggedIn()

@@ -71,8 +71,12 @@ $("#adduser1").submit(function(event) {
  });
 }
 else {
-  alert("You are not authorized to view this page! Please contact your Tenancy Administrator");
-  window.location.href = "login.html";
+  $("#adduser1").hide();
+  $("#adduserbtn1").hide();
+  $("#showuserreportbtn1").hide();
+  $("#listuserdata1").hide();
+  $("#popadduserfrm1").hide();
+  $("#useradmintab1").hide();
 }
 /* ##### ADMIn Role Check Ends here ######## */
 /*###### The above section contain code for user admin tables. Please check useradmin.html pages. The above code section ends here ################  */

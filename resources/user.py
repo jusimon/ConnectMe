@@ -83,9 +83,8 @@ class UserTenancy(Resource):
         except:
            return("message", "Unable to Create user!, Please try Again"), 400
 
-#        return jsonify(msg="Task Completed",retcode=201)
         return("message", "Tenancy Craeted  and User registerted sucessfully"), 201
-#        return Response("{'message':'Passed'}", status=201, mimetype='application/json')
+
 
 class UserRegister(Resource):
     parser = reqparse.RequestParser()
