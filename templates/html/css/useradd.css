@@ -53,13 +53,13 @@ label {
 .btn {
   background-color: #4CAF50;
   color: white;
-  padding: 12px;
+  padding: 10px;
   margin: 10px 0;
   border: none;
-  width: 25%;
-  border-radius: 3px;
+  width: 20%;
+  border-radius: 2px;
   cursor: pointer;
-  font-size: 17px;
+  font-size: 15px;
   justify-content: center;
   align-items: center;
 }

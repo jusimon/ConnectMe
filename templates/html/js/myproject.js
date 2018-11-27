@@ -12,7 +12,7 @@ $(document).ready(function() {
  });
 
 /* Call this function for validating token at server side to make sure that user is authenticated */
-var ret_code=validateToken();
+// var ret_code=validateToken();
 
 /*###### Following section container code for user admin tables. Please check useradmin.html pages################  */
 $("#useradmintab1").hide();
