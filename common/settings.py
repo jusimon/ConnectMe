@@ -7,7 +7,7 @@ MAIL_PORT = int(os.environ.get('MAIL_PORT', '587'))
 MYSQL_HOSTNAME = os.environ.get('MYSQL_HOSTNAME') or '127.0.0.1'
 MYSQL_USERNAME = os.environ.get('MYSQL_USERNAME') or 'prod'
 MYSQL_DB_NAME = os.environ.get('MYSQL_DB_NAME') or 'mysql-prod'
-MYSQLDB_PASSWORD = os.environ.get('MYSQLDB_PASSWORD') or 'MyWelcome1!'
+MYSQLDB_PASSWORD = os.environ.get('MYSQLDB_PASSWORD') or 'welcome1'
 MYSQL_PORT = int(os.environ.get('MYSQL_PORT','3306'))
 DEBUG = True
 
