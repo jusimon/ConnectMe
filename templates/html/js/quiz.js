@@ -5,6 +5,16 @@ This file contains all the custom code for ConnectMe and will be used for ajax c
 var QsetTable1;
 var QsetId;
 var QuizTable1; 
+var title;
+var    choice1;
+var    choice2;
+var    choice3;
+var    choice4;
+var    choice5;
+var    correct_answer;
+var     corect_answer;
+var quiz_questions = [];
+
 $(document).ready(function() {
 
 /* First Check for Page Auth, this will be the first function which will be executed  */
@@ -359,6 +369,159 @@ Survey
     .StylesManager
     .applyTheme("default");
 
+var    quiz_type="radiogroup";
+var    quiz_name="quiz";
+var tenancy_id = $.cookie('tenancy_id');
+var quiz_question1 = {};
+var choice_arr = [];
+console.log('tenancy_id');
+
+ var req = $.ajax({
+    type: "GET",
+    url: "/api/qset",
+    dataType: "json",
+    data:
+    {
+      "tenancy_id": tenancy_id,
+      "querytype": "surveyquiz",
+      "qset_id": QsetId
+    },
+    async: false
+ });
+req.done(questionSetTitle);
+req.fail(checkError);
+
+console.log(title);
+
+ var req = $.ajax({
+    type: "GET",
+    url: "/api/quiz",
+    dataType: "json",
+    data:
+    {
+      "tenancy_id": tenancy_id,
+      "querytype": "surveyquiz",
+      "qset_id": QsetId
+    },
+    async: false
+ });
+req.done(quizQuestions);
+req.fail(checkError);
+
+console.log(quiz_questions);
+
+var json1 = {
+    title: title,
+    showProgressBar: "bottom",
+    showTimerPanel: "top",
+    maxTimeToFinishPage: 10,
+    maxTimeToFinish: 25,
+    firstPageIsStarted: true,
+    startSurveyText: "Start Quiz",
+    pages: [],
+    completedHtml: "<h4>You have answered correctly <b>{correctedAnswers}</b> questions from <b>{questionCount}</b>.</h4>"
+ };
+
+var quiz_question =  {
+            questions: [
+                {
+                    type: "html",
+                    html: "You are about to start a quiz. <br/>You have 20 seconds for every page and 120 seconds for the whole survey questions.<br/>Please click on <b>'Start Quiz'</b> button when you are ready."
+                }
+            ]
+        };
+
+json1.pages.push(quiz_question);
+console.log(quiz_question);
+console.log(json1);
+
+
+var questions = {};
+console.log(json1);
+
+for (index = 0; index < quiz_questions.length; ++index) {
+    console.log(quiz_questions[index]);
+    if (quiz_questions[index].answer01)
+    {
+     choice1=quiz_questions[index].answer01;
+     console.log(choice1); 
+    choice_arr.push(choice1);
+    }     
+    if (quiz_questions[index].answer02)
+    {
+     choice2=quiz_questions[index].answer02;
+     console.log(choice2);
+    choice_arr.push(choice2);
+    }
+    if (quiz_questions[index].answer03)
+    {
+     choice3=quiz_questions[index].answer03;
+     console.log(choice3);
+    choice_arr.push(choice3);
+    }
+    if (quiz_questions[index].answer04)
+    {
+    choice4=quiz_questions[index].answer04;
+    console.log(choice4);
+    choice_arr.push(choice4);
+    }
+    if (quiz_questions[index].answer05)
+    {
+    choice5=quiz_questions[index].answer05;
+    console.log(choice5);
+    choice_arr.push(choice5);
+    }
+    if (quiz_questions[index].answer06)
+    {
+     choice6=quiz_questions[index].answer06;
+     console.log(choice6);
+     choice_arr.push(choice6);
+    }
+
+    quiz_title=quiz_questions[index].answer;
+    console.log(choice_arr);
+   if (quiz_questions[corect_answer] == 'answer01') {
+       corect_answer=choice1;
+   }
+     else if (quiz_questions[corect_answer] == 'answer02') {
+       corect_answer=choice2;
+   }
+     else if (quiz_questions[corect_answer] == 'answer03') {
+       corect_answer=choice3;
+   }
+     else if (quiz_questions[corect_answer] == 'answer04') {
+       corect_answer=choice4;
+   }
+     else if (quiz_questions[corect_answer] == 'answer05') {
+       corect_answer=choice5;
+   }
+     else if (quiz_questions[corect_answer] == 'answer06') {
+       corect_answer=choice6;
+   }
+  else {
+     corect_answer="none";
+ }
+  console.log(corect_answer);
+  quiz_name= "quiz"+(index+1);
+  
+quiz_question1 = {
+    questions: [
+      {
+            type: quiz_type,
+            name: quiz_name,
+            title: quiz_title,
+            choices: choice_arr,
+            correctAnswer: corect_answer
+      }
+     ]
+};
+json1.pages.push(quiz_question1);
+console.log(quiz_question1);
+console.log(json1);
+choice_arr = [];
+}
+
+
 var json = {
     title: "American History",
     showProgressBar: "bottom",
@@ -381,9 +544,7 @@ var json = {
                     type: "radiogroup",
                     name: "civilwar",
                     title: "When was the Civil War?",
-                    choices: [
-                        "1750-1800", "1800-1850", "1850-1900", "1900-1950", "after 1950"
-                    ],
+                    choices: ["1750-1800", "1800-1850", "1850-1900", "1900-1950", "after 1950"],
                     correctAnswer: "1850-1900"
                 }
             ]
@@ -419,7 +580,7 @@ var json = {
     completedHtml: "<h4>You have answered correctly <b>{correctedAnswers}</b> questions from <b>{questionCount}</b>.</h4>"
 };
 
-window.survey = new Survey.Model(json);
+window.survey = new Survey.Model(json1);
 
 survey
     .onComplete
@@ -442,4 +603,18 @@ function resetQuizForm1()
 $("#quizform1").trigger("reset");
 }
 
+function quizQuestions(response) {
+console.log(response);
+quiz_questions = JSON.parse(response);
+console.log(quiz_questions);
+}
+
+function questionSetTitle(response) {
+console.log(JSON.parse(response));
+obj = JSON.parse(response);
+$.each(obj,function(i,item){
+  title=item.qset_title;
+  console.log(title);
+});
+}
 /* ##################### Code for Question Set and Quiz generation ends here ############### */
