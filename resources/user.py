@@ -210,8 +210,13 @@ class QuestionSet(Resource):
         except pymysql.InternalError as error:
             code, message = error.args
             logger.error('Error : Unexpected error: Error during the QuestionSet Creation!')
+<<<<<<< HEAD
             print('Got error {!r}' + ' ' + code + ' ' + error)
             return("message", "Error Occurred during Question Set Creattion! Please Try Again"), 400
+=======
+            print('Got error {!r}' + ' ' + code + ' ' + error) 
+            return("message", "Error Occurred during Question Set Creation! Please Try Again"), 400
+>>>>>>> 7749521ec0c926864b9ffdabd817c614be7aa604
         db.close()
         return("message", "Question Set Created Sucessfully"), 201
 
@@ -221,8 +226,12 @@ class QuestionSet(Resource):
         parser.add_argument('created_by', type=str, required=False)
         parser.add_argument('tenancy_id', type=str, required=False)
         parser.add_argument('querytype', type=str, required=True)
+<<<<<<< HEAD
         parser.add_argument('qset_id', type=str, required=False)
         data = parser.parse_args()
+=======
+        data = parser.parse_args();
+>>>>>>> 7749521ec0c926864b9ffdabd817c614be7aa604
         print(data)
         try:
             db = pymysql.connect(cfg.MYSQL_HOSTNAME, user=cfg.MYSQL_USERNAME, passwd=cfg.MYSQLDB_PASSWORD, db=cfg.MYSQL_DB_NAME, connect_timeout=5)
@@ -231,12 +240,19 @@ class QuestionSet(Resource):
             return("message", "Unable to connect to DB"), 400
         cursor = db.cursor()
         if data['querytype'].lower() == 'recruiter':
+<<<<<<< HEAD
             query = "select qset_id,qset_intro_text,qset_thankyou_text,qset_name,qset_title,timeonperpage,maxtimetofinish,created_by from eba_quiz_question_sets where upper(created_by)=%s and tenancy_id=%s"
             argument1 = data['created_by'].upper()
             argument2 = data['tenancy_id'].upper()
             args = (argument1,argument2)
             cursor.execute(query,args)
             print(argument1)
+=======
+            query = "select qset_id,qset_intro_text,qset_thankyou_text,qset_name,qset_title,timeonperpage,maxtimetofinish,created_by from eba_quiz_question_sets where created_by=%s and tenancy_id=%s"
+            argument1 = data['created_by'].upper()
+            argument2 = data['tenancy_id'].upper()
+            cursor.execute(query,(argument1,argument2))
+>>>>>>> 7749521ec0c926864b9ffdabd817c614be7aa604
         elif data['querytype'].lower() == 'admin':
             query = "select qset_id,qset_intro_text,qset_thankyou_text,qset_name,qset_title,timeonperpage,maxtimetofinish,created_by from eba_quiz_question_sets where tenancy_id=%s"
             argument = data['tenancy_id'].upper()
@@ -321,7 +337,11 @@ class QuizQuestion(Resource):
             argument3 = data['qset_id']
             args = (argument1, argument2, argument3)
             print(argument1)
+<<<<<<< HEAD
             cursor.execute(query,args)
+=======
+            cursor.execute(query,(argument2,argument3))
+>>>>>>> 7749521ec0c926864b9ffdabd817c614be7aa604
         elif data['querytype'].lower() == 'admin':
             query = "select question_id,qset_id,question,corect_answer,answer01,answer02,answer03,answer04,answer05,answer06,created_by from eba_quiz_questions where tenancy_id=%s and qset_id=%s"
             argument1 = data['tenancy_id'].upper()
@@ -333,10 +353,15 @@ class QuizQuestion(Resource):
         elif data['querytype'].lower() == 'surveyquiz':
             query = "select question_id,qset_id,question,corect_answer,answer01,answer02,answer03,answer04,answer05,answer06,created_by from eba_quiz_questions where tenancy_id=%s and qset_id=%s"
             argument1 = data['tenancy_id']
+<<<<<<< HEAD
             argument2 = data['qset_id']
             args = (argument1,argument2)
             print(args)
             cursor.execute(query,args)
+=======
+            argument2 = data['qset_id']            
+            cursor.execute(query,(argument1,argument2))
+>>>>>>> 7749521ec0c926864b9ffdabd817c614be7aa604
         else:
             query = "select question_id,qset_id,question,question_type,publish_yn,corect_answer,answer01,answer02,answer03,answer04,answer05,answer06,created_by,updated_by from eba_quiz_questions where 1=2"
             cursor.execute(query)
