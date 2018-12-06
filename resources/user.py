@@ -310,12 +310,12 @@ class QuizQuestion(Resource):
             argument2 = data['tenancy_id']
             argument3 = data['qset_id']
             print(argument1)
-            cursor.execute(query,argument2,argument3)
+            cursor.execute(query,(argument2,argument3))
         elif data['querytype'].lower() == 'admin':
             query = "select question_id,qset_id,question,corect_answer,answer01,answer02,answer03,answer04,answer05,answer06,created_by from eba_quiz_questions where tenancy_id=%s and qset_id=%s";
             argument1 = data['tenancy_id']
             argument2 = data['qset_id']            
-            cursor.execute(query,argument1,argument2)
+            cursor.execute(query,(argument1,argument2))
         else:
             query = "select question_id,qset_id,question,question_type,publish_yn,corect_answer,answer01,answer02,answer03,answer04,answer05,answer06,created_by,updated_by from eba_quiz_questions where 1=2";
             cursor.execute(query)
