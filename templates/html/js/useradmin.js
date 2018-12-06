@@ -62,6 +62,15 @@ $("#adduser1").submit(function(event) {
     req.complete(resetAdduser1Form);
  });
 }
+else if ($.cookie('role') == 'recruiter'){
+  $("#adduser1").hide();
+  $("#adduserbtn1").hide();
+  $("#showuserreportbtn1").hide();
+  $("#listuserdata1").hide();
+  $("#popadduserfrm1").hide();
+  $("#useradmintab1").hide();
+  $("#qset").show();
+}
 else {
   $("#adduser1").hide();
   $("#adduserbtn1").hide();
@@ -69,6 +78,7 @@ else {
   $("#listuserdata1").hide();
   $("#popadduserfrm1").hide();
   $("#useradmintab1").hide();
+  $("#qset").hide();
 }
 /* ##### ADMIn Role Check Ends here ######## */
 
