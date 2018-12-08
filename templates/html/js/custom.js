@@ -23,7 +23,7 @@ deleteCookie();
 window.location.href = "index.html";
 });
 
-  $.ajaxSetup({
+ $.ajaxSetup({
     headers: {
       'Authorization': "JWT " + $.cookie('token')
     }

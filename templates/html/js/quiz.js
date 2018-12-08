@@ -26,7 +26,7 @@ $(document).ready(function() {
  });
 
 /* Call this function for validating token at server side to make sure that user is authenticated */
-var ret_code=validateToken();
+//var ret_code=validateToken();
 
 /* ############### Following Section Contains a code for Question Set and Quiz Generation ###################### */
 $("#questionsetform1").hide();
@@ -480,29 +480,29 @@ for (index = 0; index < quiz_questions.length; ++index) {
 
     quiz_title=quiz_questions[index].answer;
     console.log(choice_arr);
-   if (quiz_questions[corect_answer] == 'answer01') {
+   if (quiz_questions[index].corect_answer == 'answer01') {
        corect_answer=choice1;
    }
-     else if (quiz_questions[corect_answer] == 'answer02') {
+     else if (quiz_questions[index].corect_answer == 'answer02') {
        corect_answer=choice2;
    }
-     else if (quiz_questions[corect_answer] == 'answer03') {
+     else if (quiz_questions[index].corect_answer == 'answer03') {
        corect_answer=choice3;
    }
-     else if (quiz_questions[corect_answer] == 'answer04') {
+     else if (quiz_questions[index].corect_answer == 'answer04') {
        corect_answer=choice4;
    }
-     else if (quiz_questions[corect_answer] == 'answer05') {
+     else if (quiz_questions[index].corect_answer == 'answer05') {
        corect_answer=choice5;
    }
-     else if (quiz_questions[corect_answer] == 'answer06') {
+     else if (quiz_questions[index].corect_answer == 'answer06') {
        corect_answer=choice6;
    }
   else {
      corect_answer="none";
  }
   console.log(corect_answer);
-  quiz_name= "quiz"+(index+1);
+  quiz_name= quiz_questions[index].question;
   
 quiz_question1 = {
     questions: [

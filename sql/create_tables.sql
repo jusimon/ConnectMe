@@ -106,7 +106,7 @@ create table `mysql-prod`.`eba_quiz_result_details` (
 
 create table `mysql-prod`.`eba_quiz_invites` (
   `invite_id` varchar(40) not null,
-  `client_id` varchar(40) null,
+  `client_email_id` varchar(40) null,
   `tenancy_id` varchar(40) null,
   `qset_id`  varchar(40) null,
   `invite_qset_status` varchar(40) null,
@@ -117,10 +117,7 @@ create table `mysql-prod`.`eba_quiz_invites` (
   primary key (`invite_id`),
    constraint `fk_eba_quiz_invite_1`
     foreign key (qset_id)
-    references `mysql-prod`.`eba_quiz_question_sets` (qset_id),
-  constraint `eba_quiz_invites_2`
-    foreign key (tenancy_id)
-    references `mysql-prod`.`corp_tenancy_tab` (tenancy_id)
+    references `mysql-prod`.`eba_quiz_question_sets` (qset_id)
 );
 
 create table `mysql-prod`.`corp_tenancy_tab` (

@@ -259,6 +259,96 @@ class QuestionSet(Resource):
         print(json.dumps(json_data))
         return json.dumps(json_data)
 
+class QuizQuestion(Resource):
+    @jwt_required()
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('qset_id', type=str, required=False)
+        parser.add_argument('tenancy_id', type=str, required=False)
+        parser.add_argument('question', type=str, required=False)
+        parser.add_argument('question_type', type=str, required=False)
+        parser.add_argument('publish_yn', type=str, required=True)
+        parser.add_argument('corect_answer', type=str, required=False)
+        parser.add_argument('answer01', type=str, required=False)
+        parser.add_argument('answer02', type=str, required=False)
+        parser.add_argument('answer03', type=str, required=False)
+        parser.add_argument('answer04', type=str, required=False)
+        parser.add_argument('answer05', type=str, required=False)
+        parser.add_argument('answer06', type=str, required=False)
+        parser.add_argument('created_by', type=str, required=False)
+        parser.add_argument('updated_by', type=str, required=False)
+        data = parser.parse_args()
+
+        try:
+            db = pymysql.connect(cfg.MYSQL_HOSTNAME, user=cfg.MYSQL_USERNAME, passwd=cfg.MYSQLDB_PASSWORD, db=cfg.MYSQL_DB_NAME, connect_timeout=5)
+        except:
+            logger.error("Error : Unexpected error: Could not connect to MySql instance")
+            return("message", "unable to connect to DB"), 400
+        cursor = db.cursor()
+        print(data)
+        try:
+            query = 'insert into eba_quiz_questions values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+            cursor.execute(query, (str(uuid.uuid4()),data['qset_id'],data['tenancy_id'],data['question'],data['question_type'],data['publish_yn'],data['corect_answer'],data['answer01'],data['answer02'],data['answer03'],data['answer04'],data['answer05'],data['answer06'],data['created_by'],data['updated_by'],datetime.datetime.now(),datetime.datetime.now(),1,))
+            db.commit()
+        except pymysql.InternalError as error:
+            code, message = error.args
+            logger.error('Error : Unexpected error: Error during the QuestionSet Creation!')
+            print('Got error {!r}' + ' ' + code + ' ' + error)
+            return("message", "Error Occurred during Question Set Creattion! Please Try Again"), 400
+        db.close()
+        return("message", "Quiz question Created Sucessfully"), 201
+
+    @jwt_required()
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('created_by', type=str, required=False)
+        parser.add_argument('tenancy_id', type=str, required=False)
+        parser.add_argument('querytype', type=str, required=False)
+        parser.add_argument('qset_id', type=str, required=False)
+        data = parser.parse_args()
+        print(data)
+        try:
+            db = pymysql.connect(cfg.MYSQL_HOSTNAME, user=cfg.MYSQL_USERNAME, passwd=cfg.MYSQLDB_PASSWORD, db=cfg.MYSQL_DB_NAME, connect_timeout=5)
+        except:
+            logger.error("Error : Unexpected error: Could not connect to MySql instance")
+            return("message", "Unable to connect to DB"), 400
+        cursor = db.cursor()
+        if data['querytype'].lower() == 'recruiter':
+            query = "select question_id,qset_id,question,corect_answer,answer01,answer02,answer03,answer04,answer05,answer06,created_by from eba_quiz_questions where created_by=%s and tenancy_id=%s and qset_id=%s"
+
+            argument1 = data['created_by'].upper()
+            argument2 = data['tenancy_id']
+            argument3 = data['qset_id']
+            args = (argument1, argument2, argument3)
+            print(argument1)
+            cursor.execute(query,args)
+        elif data['querytype'].lower() == 'admin':
+            query = "select question_id,qset_id,question,corect_answer,answer01,answer02,answer03,answer04,answer05,answer06,created_by from eba_quiz_questions where tenancy_id=%s and qset_id=%s"
+            argument1 = data['tenancy_id'].upper()
+            argument2 = data['qset_id']
+            args = (argument1, argument2)
+            print(argument2)
+            cursor.execute(query,args)
+	         #cursor.execute(query,args)
+        elif data['querytype'].lower() == 'surveyquiz':
+            query = "select question_id,qset_id,question,corect_answer,answer01,answer02,answer03,answer04,answer05,answer06,created_by from eba_quiz_questions where tenancy_id=%s and qset_id=%s"
+            argument1 = data['tenancy_id']
+            argument2 = data['qset_id']
+            args = (argument1,argument2)
+            print(args)
+            cursor.execute(query,args)
+        else:
+            query = "select question_id,qset_id,question,question_type,publish_yn,corect_answer,answer01,answer02,answer03,answer04,answer05,answer06,created_by,updated_by from eba_quiz_questions where 1=2"
+            cursor.execute(query)
+        row_headers = [x[0] for x in cursor.description]
+        userdata = cursor.fetchall()
+        json_data=[]
+        for result in userdata:
+            json_data.append(dict(zip(row_headers,result)))
+        db.close()
+        print(json.dumps(json_data))
+        return json.dumps(json_data)
+
 class QsetResult(Resource):
     @jwt_required()
     def post(self):
@@ -439,7 +529,6 @@ class QuizQuestion(Resource):
         parser.add_argument('tenancy_id', type=str, required=False)
         parser.add_argument('querytype', type=str, required=False)
         parser.add_argument('qset_id', type=str, required=False)
-        parser.add_argument('client_email_id', type=str, required=False)
         data = parser.parse_args()
         print(data)
         try:
@@ -472,82 +561,9 @@ class QuizQuestion(Resource):
             args = (argument1,argument2)
             print(args)
             cursor.execute(query,args)
-        elif data['querytype'].lower() == 'client':
-            query = "select qset_title,email_sent,client_email_id,invite_qset_status,a.created_by,invite_id from `eba_quiz_invites` as b,`eba_quiz_question_sets` as a where a.`qset_id`=b.`qset_id` and b.`client_email_id`='mukeshranjan.sahay@sjsu.edu'"
-            argument1 = data['client_email_id']
-            args = (argument1)
-            print(args)
-            cursor.execute(query,args)
         else:
             query = "select question_id,qset_id,question,question_type,publish_yn,corect_answer,answer01,answer02,answer03,answer04,answer05,answer06,created_by,updated_by from eba_quiz_questions where 1=2"
             cursor.execute(query)
-        row_headers = [x[0] for x in cursor.description]
-        userdata = cursor.fetchall()
-        json_data=[]
-        for result in userdata:
-            json_data.append(dict(zip(row_headers,result)))
-        db.close()
-        print(json.dumps(json_data))
-        return json.dumps(json_data)
-
-class QsetResult(Resource):
-    @jwt_required()
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('qset_id', type=str, required=False)
-        parser.add_argument('tenancy_id', type=str, required=False)
-        parser.add_argument('ip_address', type=str, required=False)
-        parser.add_argument('client_id', type=str, required=False)
-        parser.add_argument('validation_error', type=str, required=True)
-        parser.add_argument('score_percent', type=str, required=False)
-        parser.add_argument('created_by', type=str, required=False)
-        parser.add_argument('updated_by', type=str, required=False)
-        data = parser.parse_args()
-
-        try:
-            db = pymysql.connect(cfg.MYSQL_HOSTNAME, user=cfg.MYSQL_USERNAME, passwd=cfg.MYSQLDB_PASSWORD, db=cfg.MYSQL_DB_NAME, connect_timeout=5)
-        except:
-            logger.error("Error : Unexpected error: Could not connect to MySql instance")
-            return("message", "unable to connect to DB"), 400
-        cursor = db.cursor()
-        print(data)
-        try:
-            query = 'insert into eba_quiz_results values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-            cursor.execute(query, (str(uuid.uuid4()),data['qset_id'],data['tenancy_id'],data['ip_address'],data['client_id'],data['validation_error'],data['score_percent'],data['created_by'],datetime.datetime.now(),data['updated_by'],datetime.datetime.now(),))
-            db.commit()
-        except:
-            logger.error('Error : Unexpected error: Error during the user registeration!')
-            return("message", "Unable to Register user! Erro Occurred"), 400
-        db.close()
-        return("message", "User created Sucessfully"), 201
-
-    @jwt_required()
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('created_by', type=str, required=False)
-        parser.add_argument('tenancy_id', type=str, required=False)
-        parser.add_argument('querytype', type=str, required=True)
-        data = parser.parse_args()
-        print(data)
-        try:
-            db = pymysql.connect(cfg.MYSQL_HOSTNAME, user=cfg.MYSQL_USERNAME, passwd=cfg.MYSQLDB_PASSWORD, db=cfg.MYSQL_DB_NAME, connect_timeout=5)
-        except:
-            logger.error("Error : Unexpected error: Could not connect to MySql instance")
-            return("message", "Unable to connect to DB"), 400
-        cursor = db.cursor()
-        if data['querytype'] == 'recruiter':
-            query = "select result_id,qset_id,tenancy_id,ip_address,validation_error,score_percent,created_by,updated_by from eba_quiz_results where upper(created_by)=%s and tenancy_id=%s"
-            argument1 = data['created_by'].upper()
-            argument2 = data['tenancy_id']
-            print(argument1)
-            cursor.execute(query,argument1,argument2)
-        elif data['querytype'] == 'admin':
-            query = "select result_id,qset_id,tenancy_id,ip_address,validation_error,score_percent,created_by,updated_by from eba_quiz_results where tenancy_id=%s"
-            argument = data['tenancy_id']
-            cursor.execute(query,argument)
-        else:
-           query = "select result_id,qset_id,tenancy_id,ip_address,validation_error,score_percent,created_by,updated_by from eba_quiz_results where 1=2"
-           cursor.execute(query,argument)
         row_headers = [x[0] for x in cursor.description]
         userdata = cursor.fetchall()
         json_data=[]
@@ -589,7 +605,6 @@ class EmailInvite(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('created_by', type=str, required=False)
         parser.add_argument('tenancy_id', type=str, required=False)
-        parser.add_argument('invite_id', type=str, required=False)
         parser.add_argument('querytype', type=str, required=True)
         data = parser.parse_args()
         print(data)
@@ -610,10 +625,6 @@ class EmailInvite(Resource):
             query = "select invite_id,client_email_id,qset_id,email_sent, created_by from eba_quiz_invites where tenancy_id=%s"
             argument = data['tenancy_id']
             cursor.execute(query,argument)
-        elif data['querytype'] == 'getqsetid':
-            query = "select qset_id from eba_quiz_invites where invite_id=%s"
-            argument = data['invite_id']
-            cursor.execute(query,argument)
         else:
            query = "select invite_id,client_email_id,qset_id,email_sent, created_by from eba_quiz_invites where 1=2"
            cursor.execute(query)
@@ -625,4 +636,3 @@ class EmailInvite(Resource):
         db.close()
         print(json.dumps(json_data))
         return json.dumps(json_data)
-

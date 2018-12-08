@@ -7,12 +7,12 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/custom.css">
   <link rel="stylesheet" href="css/sidenav.css">
+  <link rel="stylesheet" href="css/card.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="js/jquery.cookie.js"></script>
   <script src="js/custom.js"></script>
   <script src="js/myproject.js"></script>
-  <script src="js/useradmin.js"></script>
 </head>
 <body>
 
@@ -62,24 +62,18 @@
     <div class="menu-list">
         <ul id="menu-content" class="menu-content collapse out">
             <li>
-                <a href="#">
+                <a href="myproject.html">
                     <i class="fa fa-dashboard fa-lg"></i> Dashboard
                 </a>
             </li>
-            <li data-toggle="collapse" data-target="#products" class="collapsed active">
+            <li data-toggle="collapse" data-target="#questiontab1" class="collapsed active">
                 <a href="questionset.html" id="qset"><i class="fa fa-gift fa-lg"></i> Manage Questionnaire <span class="arrow"></span></a>
             </li>
-            <li data-toggle="collapse" data-target="#service" class="collapsed">
-                <a href="#"><i class="fa fa-globe fa-lg"></i> Publish Questionnaire <span class="arrow"></span></a>
+            <li data-toggle="collapse" data-target="#invitetab1" class="collapsed">
+                <a href="invite.html"><i class="fa fa-globe fa-lg"></i> Publish Questionnaire <span class="arrow"></span></a>
             </li>
-            <li data-toggle="collapse" data-target="#results" class="collapsed">
-                <a href="#"><i class="fa fa-car fa-lg"></i> Manage Results <span class="arrow"></span></a>
-            </li>
-            <li data-toggle="collapse" data-target="#resume" class="collapsed">
-                <a href="#"><i class="fa fa-car fa-lg"></i> Manage Resumes <span class="arrow"></span></a>
-            </li>
-            <li>
-                <a href="#"> <i class="fa fa-user fa-lg"></i> My Profile </a>
+            <li data-toggle="collapse" data-target="#resulttab1" class="collapsed">
+                <a href="result.html"><i class="fa fa-car fa-lg"></i> Manage Results <span class="arrow"></span></a>
             </li>
             <li>
                <a href="useradmin.html" id="useradmintab1"><i class="fa fa-gift fa-lg"></i> Administartion  <span class="arrow"></span></a>
@@ -93,7 +87,88 @@
 <div class="container" id="main">
     <div class="row">
         <div class="col-md-12">
-            <h4>This is suppose to be in the main content</h4>
+
+<!------------ Cards for Admin User ---------------------------------------->
+<div class="row" id="adminuser">
+  <div class="column">
+    <div class="card">
+      <h3>User Administartion</h3>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="card">
+      <h3>Manage Questionnaire</h3>
+    </div>
+  </div>
+  
+  <div class="column">
+    <div class="card">
+      <h3>publish Questionnaire</h3>
+    </div>
+  </div>
+  
+  <div class="column">
+    <div class="card">
+      <h3>Manage Results</h3>
+    </div>
+  </div>
+</div>
+<!------------ Cards for Admin User End here ---------------------------------------->
+
+<!------------ Cards for Recruiter User ---------------------------------------->
+<div class="row" id="recruiteruser">
+  <div class="column">
+    <div class="card">
+      <h3>Manage Questionnaire</h3>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="card">
+      <h3>publish Questionnaire</h3>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="card">
+      <h3>Manage Results</h3>
+    </div>
+  </div>
+</div>
+<!------------ Cards for Recruiter End here ---------------------------------------->
+
+<!------------ Cards for Client User ---------------------------------------->
+
+<!--------- Client Dashboard Section Begin Here ----------->
+<div class="container" id="listclientreport1">
+<a class="editor_create">Create New Question Set </a>
+<table id="clientreport1" class="display" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                           <th>Question Set Name</th>                             
+                            <th>Client Email id</th>
+                            <th>Quiz Status</th>
+                            <th>Created By</th>
+                            <th>Take The Quiz</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                           <th>Question Set Name</th>
+                            <th>Client Email id</th>
+                            <th>Quiz Status</th>
+                            <th>Created By</th>
+                            <th>Take The Quiz</th>
+                        </tr>
+                    </tfoot>
+                </table>
+</div>
+<!--------- Client Dashboard Section End Here ----------->
+
+
+
+<!------------ Cards for Client End here ---------------------------------------->
         </div>
     </div>
 </div>

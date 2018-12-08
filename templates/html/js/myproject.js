@@ -2,9 +2,23 @@
 This file contains all the custom code for ConnectMe and will be used for ajax calls
 */
 
-$(document).ready(function() {
+var QuizTable1_1;
 
-/* First Check for Page Auth, this will be the first function which will be executed  */
+var QsetId_1;
+var QuizTable_1;
+var title;
+var    choice_1;
+var    choice_2;
+var    choice_3;
+var    choice_4;
+var    choice_5;
+var    choice_6;
+var    correct_answer;
+var     corect_answer;
+var quiz_questions_1 = [];
+
+
+$(document).ready(function() {
 
  $.ajaxSetup({
     headers: {
@@ -13,15 +27,76 @@ $(document).ready(function() {
  });
 
 /* Call this function for validating token at server side to make sure that user is authenticated */
-var ret_code=validateToken();
+ var ret_code=validateToken();
 
-/* ############### Following Section Contains a code for Question Set and Quiz Generation ###################### */
+/* ### Admin block for user administration will be enabled if and only if current role of the user is admin */
+if ($.cookie('role') == 'admin')
+{
+$("#useradmintab1").show(); 
+$("#qsettab1").show();
+$("#invitetab1").show();
+$("#resulttab1").show();
+$("#listclientreport1").hide();
+$("#clientreport1").hide();
+$("surveyElement").hide();
+}
+
+if ($.cookie('role') == 'recruiter')
+{
+$("#useradmintab1").hide();
+$("#qsettab1").show();
+$("#invitetab1").show();
+$("#resulttab1").show();
+$("#listclientreport1").hide();
+$("#clientreport1").hide();
+$("surveyElement").hide();
+}
+
+if ($.cookie('role') == 'client')
+{
+$("#useradmintab1").hide();
+$("#qsettab1").hide();
+$("#invitetab1").hide();
+$("#listclientreport1").show();
+$("#clientreport1").show();
+$("#resulttab1").hide();
+populatePollData();
+}
 
 
-/*###### Following section container code for user admin tables. Please check useradmin.html pages################  */
-
+$('#clientreport1').on( 'click', '#viewpollbtn1', function () {
+        var data=QuizTable1_1.row( $(this).parents('tr') ).data();
+        console.log(data);
+        inviteid=data[4];
+        console.log(QsetId_1);
+        $("#useradmintab1").hide();
+        $("#qsettab1").hide();
+        $("#invitetab1").hide();
+        $("#listclientreport1").hide();
+        $("#clientreport1").hide();
+	$("surveyElement").show();
+   var req = $.ajax({
+    type: "GET",
+    url: "/api/invite",
+    dataType: "json",
+    data:
+    {
+      "invite_id": inviteid,
+      "querytype": "getqsetid",
+      "qset_id": QsetId_1
+    },
+    async: false
+ });
+req.done(questionSetID);
+req.fail(checkError);
+StartPoll();
 });
 
+
+/* ##### ADMIn Role Check Ends here ######## */
+/*###### The above section contain code for user admin tables. Please check useradmin.html pages. The above code section ends here ################  */
+
+});
 
 
 /* ########### Token Auth block begins here  #################### */
@@ -30,11 +105,11 @@ function validateToken()
 {
 if ( $.cookie('token') && $.cookie('username'))
   {
-     var req1 = $.ajax({
+     var req = $.ajax({
         type: "GET",
         url: "/api/items",
     });
-    req1.complete(chkResponse);
+    req.complete(chkResponse);
 }
 else
  {
@@ -53,6 +128,7 @@ function chkResponse(response)
 console.log(response);
 if (response['status']==200 && response['statusText']=='OK')
  {
+          console.log(' I am in sucess');
 	  return 0;
  }
  else
@@ -62,31 +138,257 @@ if (response['status']==200 && response['statusText']=='OK')
 redirectLogin();
 }
 
-/* ########### Token Auth block end here  #################### */
 
+function populatePollData() {
+ var tenancy_id = $.cookie('tenancy_id');
+ var created_by = $.cookie('username');
+ var querytype = $.cookie('role');
+ console.log('tenancy_id');
+ console.log('username');
 
-function checkError(response) {
-  var errordesc;
-  var errorcode;
-
-  if (response.responseJSON['description'])
-  {
-    errordesc = response.responseJSON['description'];
-  }
-  else
-  {
-    errordesc = "Unkown Error Occurred";
-  }
-  if (response.responseJSON['status_code'])
-  {
-    errorcode = response.responseJSON['status_code'];
-  }
-  else
-  {
-      errorcode = "Please try Again!";
-  }
-
-  alert("Login Failed :" + " " + errordesc + " - " + errorcode);
-  deleteCookie();
-  console.log(response);
+ var req = $.ajax({
+    type: "GET",
+    url: "/api/quiz",
+    dataType: "json",
+    data:
+    {
+      "tenancy_id": tenancy_id,
+      "created_by": created_by,
+      "querytype": querytype,
+    }
+ });
+ req.done(buildPollTable);
+ req.fail(checkError);
 }
+
+function buildPollTable(response)
+{
+  console.log(response);
+  obj = JSON.parse(response);
+  var rowdata;
+  console.log(obj);
+
+var resultarr= [];
+
+obj.forEach(function(Object){
+    resultarr.push([Object.qset_title,Object.client_email_id,Object.invite_qset_status,Object.created_by,Object.invite_id]);
+});
+
+console.log(resultarr);
+
+QuizTable1_1= $('#clientreport1').DataTable( {
+        destroy: true,
+        data: resultarr,
+        columns: [
+            { title: "Poll Name" },
+            { title: "Client Email id" },
+            { title: "Poll Status" },
+            { title: "Created By" },
+            { title: "Take The Poll"  },
+           ],
+            "columnDefs": [ {
+                "targets": -1,
+                "data": null,
+                "defaultContent": "<button id='viewpollbtn1'>Take The Poll</button>"         
+               } ],
+    } );
+
+}
+
+function StartPoll()
+{
+Survey
+    .StylesManager
+    .applyTheme("default");
+
+var    quiz_type="radiogroup";
+var    quiz_name="quiz";
+var tenancy_id = $.cookie('tenancy_id');
+var quiz_question1 = {};
+var choice_arr = [];
+console.log('tenancy_id');
+
+ var req = $.ajax({
+    type: "GET",
+    url: "/api/qset",
+    dataType: "json",
+    data:
+    {
+      "tenancy_id": tenancy_id,
+      "querytype": "surveyquiz",
+      "qset_id": QsetId_1
+    },
+    async: false
+ });
+req.done(questionSetTitle);
+req.fail(checkError);
+
+console.log(title);
+
+ var req = $.ajax({
+    type: "GET",
+    url: "/api/quiz",
+    dataType: "json",
+    data:
+    {
+      "tenancy_id": tenancy_id,
+      "querytype": "surveyquiz",
+      "qset_id": QsetId_1
+    },
+    async: false
+ });
+req.done(quizQuestions);
+req.fail(checkError);
+
+console.log(quiz_questions_1);
+
+var json1 = {
+    title: title,
+    showProgressBar: "bottom",
+    showTimerPanel: "top",
+    maxTimeToFinishPage: 10,
+    maxTimeToFinish: 25,
+    firstPageIsStarted: true,
+    startSurveyText: "Start Quiz",
+    pages: [],
+    completedHtml: "<h4>You have answered correctly <b>{correctedAnswers}</b> questions from <b>{questionCount}</b>.</h4>"
+ };
+
+var quiz_question =  {
+            questions: [
+                {
+                    type: "html",
+                    html: "You are about to start a quiz. <br/>You have 20 seconds for every page and 120 seconds for the whole survey questions.<br/>Please click on <b>'Start Quiz'</b> button when you are ready."
+                }
+            ]
+        };
+
+json1.pages.push(quiz_question);
+console.log(quiz_question);
+console.log(json1);
+
+
+var questions = {};
+console.log(json1);
+
+for (index = 0; index < quiz_questions_1.length; ++index) {
+    console.log(quiz_questions_1[index]);
+    if (quiz_questions_1[index].answer01)
+    {
+     choice_1=quiz_questions_1[index].answer01;
+     console.log(choice_1);
+    choice_arr.push(choice_1);
+    }
+    if (quiz_questions_1[index].answer02)
+    {
+     choice_2=quiz_questions_1[index].answer02;
+     console.log(choice_2);
+    choice_arr.push(choice_2);
+    }
+    if (quiz_questions_1[index].answer03)
+    {
+     choice_3=quiz_questions_1[index].answer03;
+     console.log(choice_3);
+    choice_arr.push(choice_3);
+    }
+    if (quiz_questions_1[index].answer04)
+    {
+    choice_4=quiz_questions_1[index].answer04;
+    console.log(choice_4);
+    choice_arr.push(choice_4);
+    }
+    if (quiz_questions_1[index].answer05)
+    {
+    choice_5=quiz_questions_1[index].answer05;
+    console.log(choice_5);
+    choice_arr.push(choice_5);
+    }
+    if (quiz_questions_1[index].answer06)
+    {
+     choice_6=quiz_questions_1[index].answer06;
+     console.log(choice_6);
+     choice_arr.push(choice_6);
+    }
+
+    quiz_title=quiz_questions_1[index].answer;
+    console.log(choice_arr);
+   if (quiz_questions_1[corect_answer] == 'answer01') {
+       corect_answer=choice_1;
+   }
+     else if (quiz_questions_1[corect_answer] == 'answer02') {
+       corect_answer=choice_2;
+   }
+     else if (quiz_questions_1[corect_answer] == 'answer03') {
+       corect_answer=choice_3;
+   }
+     else if (quiz_questions_1[corect_answer] == 'answer04') {
+       corect_answer=choice_4;
+   }
+     else if (quiz_questions_1[corect_answer] == 'answer05') {
+       corect_answer=choice_5;
+   }
+     else if (quiz_questions_1[corect_answer] == 'answer06') {
+       corect_answer=choice_6;
+   }
+  else {
+     corect_answer="none";
+ }
+  console.log(corect_answer);
+  quiz_name= quiz_questions_1[index].question;
+
+quiz_question1 = {
+    questions: [
+      {
+            type: quiz_type,
+            name: quiz_name,
+            title: quiz_title,
+            choices: choice_arr,
+            correctAnswer: corect_answer
+      }
+     ]
+};
+json1.pages.push(quiz_question1);
+console.log(quiz_question1);
+console.log(json1);
+choice_arr = [];
+}
+
+window.survey = new Survey.Model(json1);
+
+survey
+    .onComplete
+    .add(function (result) {
+        document
+            .querySelector('#surveyResult')
+            .innerHTML = "result: " + JSON.stringify("You have completed the Poll");
+    });
+
+$("#surveyElement").Survey({model: survey});
+}
+
+function quizQuestions(response) {
+console.log(response);
+quiz_questions_1 = JSON.parse(response);
+console.log(quiz_questions_1);
+}
+
+function questionSetTitle(response) {
+console.log(JSON.parse(response));
+obj = JSON.parse(response);
+$.each(obj,function(i,item){
+  title=item.qset_title;
+  console.log(title);
+});
+}
+
+function questionSetID(response) {
+console.log(JSON.parse(response));
+obj = JSON.parse(response);
+$.each(obj,function(i,item){
+  QsetId_1=item.qset_title;
+  console.log(QsetId_1);
+});
+}
+
+
+/* ########### Token Auth block end here  #################### */

@@ -15,10 +15,8 @@ $(document).ready(function() {
  });
 
 /* Call this function for validating token at server side to make sure that user is authenticated */
-var ret_code=validateToken();
+//var ret_code=validateToken();
 
-
-$("#useradmintab1").hide();
 
 /* ### Admin block for user administration will be enabled if and only if current role of the user is admin */
 
