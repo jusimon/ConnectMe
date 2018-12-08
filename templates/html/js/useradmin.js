@@ -20,7 +20,7 @@ $(document).ready(function() {
 
 /* ### Admin block for user administration will be enabled if and only if current role of the user is admin */
 
-if ($.cookie('role') == 'ADMIN')
+if ($.cookie('role') == 'admin')
 {
 $("#useradmintab1").show();
 $("#adduser1").hide();

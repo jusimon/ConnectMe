@@ -164,7 +164,8 @@ if ($.cookie('token') && $.cookie('username'))
     {
       "username": uname,
       "querytype": "cookie"
-    }
+    },
+    async: false
  });
  req.done(setCookie);
  req.fail(checkError);
@@ -172,7 +173,7 @@ if ($.cookie('token') && $.cookie('username'))
  // alert("I am in Logged In");
  console.log(new Date());
   console.log('Processing Cookies');
-  sleep(2000);
+ // sleep(2000);
   console.log(new Date());
  window.location.href = "index.html";
  }

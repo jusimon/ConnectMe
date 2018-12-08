@@ -38,10 +38,13 @@ $("#invitetab1").show();
 $("#resulttab1").show();
 $("#listclientreport1").hide();
 $("#clientreport1").hide();
-$("surveyElement").hide();
+$("#surveyElement").hide();
+$("#surveyResult").hide();
+$("#adminuser").show();
+$("#recruiteruser").hide();
+$("#questiontab1").show();
 }
-
-if ($.cookie('role') == 'recruiter')
+else if ($.cookie('role') == 'recruiter')
 {
 $("#useradmintab1").hide();
 $("#qsettab1").show();
@@ -49,10 +52,13 @@ $("#invitetab1").show();
 $("#resulttab1").show();
 $("#listclientreport1").hide();
 $("#clientreport1").hide();
-$("surveyElement").hide();
+$("#surveyElement").hide();
+$("#surveyResult").hide();
+$("#adminuser").hide();
+$("#recruiteruser").show();
+$("#questiontab1").show();
 }
-
-if ($.cookie('role') == 'client')
+else if ($.cookie('role') == 'client')
 {
 $("#useradmintab1").hide();
 $("#qsettab1").hide();
@@ -60,21 +66,40 @@ $("#invitetab1").hide();
 $("#listclientreport1").show();
 $("#clientreport1").show();
 $("#resulttab1").hide();
+$("#adminuser").hide();
+$("#recruiteruser").hide();
+$("#surveyElement").hide();
+$("#surveyResult").hide();
+$("#questiontab1").hide();
 populatePollData();
 }
-
+else
+{
+$("#useradmintab1").hide();
+$("#qsettab1").hide();
+$("#invitetab1").hide();
+$("#listclientreport1").hide();
+$("#clientreport1").hide();
+$("#resulttab1").hide();
+$("#adminuser").hide();
+$("#recruiteruser").hide();
+$("#surveyElement").hide();
+$("#surveyResult").hide();
+}
 
 $('#clientreport1').on( 'click', '#viewpollbtn1', function () {
         var data=QuizTable1_1.row( $(this).parents('tr') ).data();
         console.log(data);
         inviteid=data[4];
-        console.log(QsetId_1);
+        console.log(inviteid);
         $("#useradmintab1").hide();
         $("#qsettab1").hide();
         $("#invitetab1").hide();
         $("#listclientreport1").hide();
         $("#clientreport1").hide();
-	$("surveyElement").show();
+        $("#surveyElement").show();
+        $("#surveyResult").show();
+
    var req = $.ajax({
     type: "GET",
     url: "/api/invite",
@@ -203,6 +228,7 @@ Survey
 
 var    quiz_type="radiogroup";
 var    quiz_name="quiz";
+var    quiz_id;
 var tenancy_id = $.cookie('tenancy_id');
 var quiz_question1 = {};
 var choice_arr = [];
@@ -312,22 +338,22 @@ for (index = 0; index < quiz_questions_1.length; ++index) {
 
     quiz_title=quiz_questions_1[index].answer;
     console.log(choice_arr);
-   if (quiz_questions_1[corect_answer] == 'answer01') {
+   if (quiz_questions_1[index].corect_answer == 'answer01') {
        corect_answer=choice_1;
    }
-     else if (quiz_questions_1[corect_answer] == 'answer02') {
+     else if (quiz_questions_1[index].corect_answer == 'answer02') {
        corect_answer=choice_2;
    }
-     else if (quiz_questions_1[corect_answer] == 'answer03') {
+     else if (quiz_questions_1[index].corect_answer == 'answer03') {
        corect_answer=choice_3;
    }
-     else if (quiz_questions_1[corect_answer] == 'answer04') {
+     else if (quiz_questions_1[index].corect_answer == 'answer04') {
        corect_answer=choice_4;
    }
-     else if (quiz_questions_1[corect_answer] == 'answer05') {
+     else if (quiz_questions_1[index].corect_answer == 'answer05') {
        corect_answer=choice_5;
    }
-     else if (quiz_questions_1[corect_answer] == 'answer06') {
+     else if (quiz_questions_1[index].corect_answer == 'answer06') {
        corect_answer=choice_6;
    }
   else {
@@ -335,13 +361,13 @@ for (index = 0; index < quiz_questions_1.length; ++index) {
  }
   console.log(corect_answer);
   quiz_name= quiz_questions_1[index].question;
-
+  quiz_id=quiz_questions_1[index].question_id;
 quiz_question1 = {
     questions: [
       {
             type: quiz_type,
-            name: quiz_name,
-            title: quiz_title,
+            name: quiz_id,
+            title: quiz_name,
             choices: choice_arr,
             correctAnswer: corect_answer
       }
@@ -360,7 +386,7 @@ survey
     .add(function (result) {
         document
             .querySelector('#surveyResult')
-            .innerHTML = "result: " + JSON.stringify("You have completed the Poll");
+            .innerHTML = "result: " + JSON.stringify(result.data);
     });
 
 $("#surveyElement").Survey({model: survey});
@@ -385,9 +411,10 @@ function questionSetID(response) {
 console.log(JSON.parse(response));
 obj = JSON.parse(response);
 $.each(obj,function(i,item){
-  QsetId_1=item.qset_title;
+  QsetId_1=item.qset_id;
   console.log(QsetId_1);
 });
+
 }
 
 

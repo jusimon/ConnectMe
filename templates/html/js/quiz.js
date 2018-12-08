@@ -26,9 +26,11 @@ $(document).ready(function() {
  });
 
 /* Call this function for validating token at server side to make sure that user is authenticated */
-//var ret_code=validateToken();
 
 /* ############### Following Section Contains a code for Question Set and Quiz Generation ###################### */
+
+if (($.cookie('role') == 'admin') ||  ($.cookie('role') == 'recruiter'))
+{
 $("#questionsetform1").hide();
 $("#listquizreport1").hide();
 $("#quizform1").hide();
@@ -192,7 +194,11 @@ $("#showquizfrmbtn1").click(function() {
     populateQsetData();
 });
 
-
+}
+else
+{
+$('body').hide();
+}
 /* ################################################################################################################ */
 
 });
