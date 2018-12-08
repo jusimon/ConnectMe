@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="css/editor.dataTables.min.css">
- <link href="https://surveyjs.azureedge.net/1.0.58/survey.css" type="text/css" rel="stylesheet"/>
+  <link href="https://surveyjs.azureedge.net/1.0.58/survey.css" type="text/css" rel="stylesheet"/>
   <link rel="stylesheet" href="css/sidenav.css">
   <link rel="stylesheet" href="css/useradd.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -16,7 +16,7 @@
   <script src="js/jquery.cookie.js"></script>
   <script src="js/custom.js"></script>
   <script src="js/myproject.js"></script>
-  <script src="js/invite.js"></script>
+  <script src="js/result.js"></script>
 </head>
 <body>
 
@@ -52,7 +52,6 @@
 <br>
 
 <!---- Side Navigation Bar Start here -->
-<!---- Side Navigation Bar Start here -->
 
 <div class="nav-side-menu">
     <div class="brand">Brand Logo</div>
@@ -79,96 +78,30 @@
 
 <!--------- Side Navigation Bar End here ----------->
 
-<!--------- Side Navigation Bar End here ----------->
-
-<!------------------------------- Panel Section Begins here --------------------->
+<!------------------------------------------------------------- Question Set Section -------------------------------------------->
 <div class="container" id="main">
     <div class="row">
     <div class="col-md-12">
-    <div class="panel panel-default">
-    <div class="panel-body">Administer Invites
-       <div style="text-align: right;">
-        <input type="submit" id="showinvitereportbtn1" value="View Invite Report" class="btn">
-       </div>
-   </div>
- </div>
-
-<!-----------------------Panel Section Ends here ------------------------>
-
-<!------------------------------------------------------------- Question Set Section -------------------------------------------->
 
 <!--------- Question Set Reports  Begins Here ----------->
-<div class="container" id="listinvitereport1">
-<a class="editor_create">Create New Question Set </a>
-<table id="invitereport1" class="display" cellspacing="0" width="100%">
+<div class="container" id="listresultreport1">
+<table id="resulttable1" class="display" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th>Question Set Name</th>
-                            <th>Title</th>
-                            <th>TimeOnPerPage</th>
-                            <th>Max Time to Finish</th>
-                            <th>Intro Text</th>
-                            <th>ThankYou Text</th>
+                            <th>Email Id(Appeared in the tets)</th>
+                            <th>Validation Error</th>
+                            <th>Score Percent</th>
                             <th>Created By</th>
-                            <th>Edit/Delete</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th>Question Set Name</th>
-                            <th>Title</th>
-                            <th>Time on Per Page</th>
-                            <th>Max Time to Finish</th>
-                            <th>Intro Text</th>
-                            <th>ThankYou Text</th>
+                            <th>Email Id(Appeared in the tets)</th>
+                            <th>Validation Error</th>
+                            <th>Score Percent</th>
                             <th>Created By</th>
-                            <th>Edit</th>
-                        </tr>
-                    </tfoot>
-                </table>
-</div>
-<!--------- Question Set Reports End Here ----------->
-
-
-<!--------- Question Set HTML Form Begins Here ----------->
-<div class="signup-form">
-    <form id="inviteform1">
-          <h2> Send Invite to Client </h2>
-           <p class="hint-text">Invitation to attend the online Quiz!</p>
-       <div class="form-group">
-        <div class="row">
- <div class="col-xs-6"><input type="text" class="form-control" name="client_email_id" placeholder="Enter Client Email Address" required="required"></div>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-success btn-lg btn-block" id="sendemailbtn2">Submit</button>
-        </div>
-    </form>
-</div>
-<!--------- Question Set HTML Form Ends  Here ----------->
-
-<!------------------------------------------------------------- Questions set  End Section -------------------------------------------->
-
-
-<!--------------------------------------------------Quiz Questions Section Begin here -------------------------------------------------->
-
-<!--------- Question Set Reports  Begins Here ----------->
-<div class="container" id="listquizreport1">
-<a class="editor_create">Create New Question Set </a>
-<table id="invitedetailreport1" class="display" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Client Email id</th>
-                            <th>Email Sent?</th>
-                            <th>Created By</th>
-                            <th>Edit/Delete</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                         <th>Client Email id</th>
-                         <th>Email Sent?</th>
-                         <th>Created By</th>
-                         <th>Edit/Delete</th>
                         </tr>
                     </tfoot>
                 </table>

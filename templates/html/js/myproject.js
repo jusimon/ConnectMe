@@ -384,10 +384,32 @@ window.survey = new Survey.Model(json1);
 survey
     .onComplete
     .add(function (result) {
-        document
-            .querySelector('#surveyResult')
-            .innerHTML = "result: " + JSON.stringify(result.data);
+//        document
+//            .querySelector('#surveyResult')
+//            .innerHTML = "result: " + JSON.stringify(result.data);
+    var score_percent = ((50/100) * 100);
+    console.log(score_percent);
+    var data = [];
+    var tenancy_id = $.cookie('tenancy_id');
+    var created_by = $.cookie('username');
+    var updated_by = $.cookie('username');
+    data.push({name: "updated_by", value: updated_by});
+    data.push({name: "created_by", value: created_by});
+    data.push({name: "tenancy_id", value: tenancy_id});
+    data.push({name: "score_percent", value: score_percent});
+    data.push({name: "validation_error", value: "none" });
+    data.push({name: "client_email_id", value: created_by});
+    data.push({name: "qset_id", value: QsetId_1});
+    console.log(data);
+    var req=$.ajax({
+      type: "POST",
+      url: "/api/result",
+      data: $.param(data),
     });
+    req.done();
+    req.fail();
+//    req.complete(resetQuestionSetForm1);
+ });
 
 $("#surveyElement").Survey({model: survey});
 }

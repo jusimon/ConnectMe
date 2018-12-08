@@ -66,9 +66,9 @@ create table `mysql-prod`.`eba_quiz_questions` (
 create table `mysql-prod`.`eba_quiz_results` (
   `result_id` varchar(40) not null,
   `qset_id` varchar(40) null,
-  `tenancy_id` varchar(4) null,
+  `tenancy_id` varchar(40) null,
   `ip_address` varchar(255) null,
-  `client_id` varchar(40) null,
+  `client_email_id` varchar(40) null,
   `validation_error` varchar(4000) null,
   `score_percent` varchar(3) null,
   `created_by` varchar(45) null,
