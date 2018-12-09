@@ -308,8 +308,9 @@ class QsetResult(Resource):
             query = "select a.qset_title,client_email_id,validation_error,score_percent,b.created_by from eba_quiz_question_sets a, eba_quiz_results b where a.qset_id = b.qset_id  and b.created_by=%s and         b.tenancy_id=%s"
             argument1 = data['created_by'].upper()
             argument2 = data['tenancy_id']
+            args = (argument1, argument2);
             print(argument1)
-            cursor.execute(query,argument1,argument2)
+            cursor.execute(query,args)
         elif data['querytype'] == 'admin':
             query = "select a.qset_title,client_email_id,validation_error,score_percent,b.created_by from eba_quiz_question_sets a, eba_quiz_results b where a.qset_id = b.qset_id  and b.tenancy_id=%s"
             argument = data['tenancy_id']
