@@ -205,16 +205,16 @@ QuizTable1_1= $('#clientreport1').DataTable( {
         destroy: true,
         data: resultarr,
         columns: [
-            { title: "Poll Name" },
+            { title: "Quiz Name" },
             { title: "Client Email id" },
-            { title: "Poll Status" },
+            { title: "Quiz Status" },
             { title: "Created By" },
-            { title: "Take The Poll"  },
+            { title: "Take The Quiz"  },
            ],
             "columnDefs": [ {
                 "targets": -1,
                 "data": null,
-                "defaultContent": "<button id='viewpollbtn1'>Take The Poll</button>"         
+                "defaultContent": "<button id='viewpollbtn1'>Take The Quiz</button>"         
                } ],
     } );
 
