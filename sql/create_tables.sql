@@ -140,7 +140,7 @@ create table `mysql-prod`.`corp_tenancy_user_tab` (
   `tenancy_id` varchar(40) null,
   `mobile_num` varchar(15) null,
   primary key (`user_uid`),
-  unique index `email_id_unique` (`email_id` asc) visible,
+  unique index `email_id_unique` (`email_id` asc) ,
   constraint `fk_corp_tenancy_user_tab_1`
     foreign key (tenancy_id)
     references `mysql-prod`.`corp_tenancy_tab` (tenancy_id));
