@@ -3,6 +3,7 @@ This file contains all the custom code for ConnectMe and will be used for ajax c
 */
 
 var invitetable1;
+var inviteListTable;
 var inviteqsetid;
 $(document).ready(function() {
 
@@ -80,9 +81,9 @@ $('#invitereport1').on( 'click', '#sendinvitebtn1', function () {
 $("#showinvitereportbtn1").click(function() {
         $("#listinvitereport1").show();
         $("#invitedetailreport1").hide();
-        $("#inviteform1").show();
+        $("#inviteform1").hide();
         $("#showsendemailfrmbtn1").show();
-                $("#showinvitereportbtn1").hide()
+        $("#showinvitereportbtn1").hide()
         populateInviteData();
 });
 
@@ -127,13 +128,11 @@ function buildClientList(response)
   obj = JSON.parse(response);
   console.log(obj);
 
-var resultarr= [];
   dropdown = $('#clientlist');
   dropdown.empty();
   dropdown.append('<option selected="true" disabled>Choose a Client</option>');
 
   obj.forEach(function(Object){
-    resultarr.push([Object.email_id,Object.role]);
     dropdown.append($('<option></option>').attr('value', Object.email_id).text(Object.email_id));
 });
 
@@ -172,12 +171,12 @@ function buildInviteEmailTable(response)
 var resultarr= [];
 
 obj.forEach(function(Object){
-    resultarr.push([Object.client_email_id,Object.email_sent,Object.created_by,object.invite_id]);
+    resultarr.push([Object.client_email_id,Object.email_sent,Object.created_by,Object.invite_id]);
 });
 
 console.log(resultarr);
 
-QuizTable1= $('#invitedetailreport1').DataTable( {
+inviteListTable = $('#invitedetailreport1').DataTable( {
         destroy: true,
         data: resultarr,
         columns: [
