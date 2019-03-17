@@ -166,6 +166,9 @@ class UserRegister(Resource):
         elif data['querytype'] == 'userreport':
             query = "select user_uid,designation,first_name,last_name,email_id,role,mobile_num from corp_tenancy_user_tab where tenancy_id=%s"
             argument = data['tenancy_id']
+        elif data['querytype'] == 'listclients':
+            query = "select email_id,role from corp_tenancy_user_tab where tenancy_id=%s"
+            argument = data['tenancy_id']
         else:
            query = "select a.user_uid,a.designation,a.first_name,a.last_name,a.email_id,a.role,b.tenancy_name from corp_tenancy_user_tab a, corp_tenancy_tab b where a.tenancy_id=b.tenancy_id and b.tenancy_id=%s"
         cursor.execute(query,argument)

@@ -72,6 +72,8 @@ $('#invitereport1').on( 'click', '#sendinvitebtn1', function () {
         $("#listinvitereport1").hide();
         $("#invitedetailreport1").hide();
         $("#inviteform1").show();
+
+        sendInviteList();
 });
 
 
@@ -100,6 +102,43 @@ $("#showsendemailfrmbtn1").click(function() {
 
 
 /* ##################### Code for Qustion Set and Quiz generation Starts here ############### */
+function sendInviteList() {
+ var tenancy_id = $.cookie('tenancy_id');
+ console.log('tenancy_id');
+ console.log('username');
+
+ var req = $.ajax({
+    type: "GET",
+    url: "/api/usermgmt",
+    dataType: "json",
+    data:
+    {
+      "tenancy_id": tenancy_id,
+      "querytype": "listclients",
+    }
+ });
+ req.done(buildClientList);
+ req.fail(checkError);
+}
+
+function buildClientList(response)
+{
+  console.log(response);
+  obj = JSON.parse(response);
+  console.log(obj);
+
+var resultarr= [];
+  dropdown = $('#clientlist');
+  dropdown.empty();
+  dropdown.append('<option selected="true" disabled>Choose a Client</option>');
+
+  obj.forEach(function(Object){
+    resultarr.push([Object.email_id,Object.role]);
+    dropdown.append($('<option></option>').attr('value', Object.email_id).text(Object.email_id));
+});
+
+}
+
 function inviteDetailReport() {
  var tenancy_id = $.cookie('tenancy_id');
  var created_by = $.cookie('username');
