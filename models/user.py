@@ -1,11 +1,7 @@
-from flask_restful import Resource, reqparse
-from werkzeug.security import generate_password_hash, check_password_hash
 import pymysql
 import common.settings as cfg
 from common.logging_module import get_logger
 import sys
-import datetime
-import uuid
 
 logger = get_logger('user')
 

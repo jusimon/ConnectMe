@@ -1,6 +1,5 @@
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 from models.user import UserModel
-import common.settings
 
 def authenticate(username, password):
     user = UserModel.find_by_username(username)

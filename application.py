@@ -7,7 +7,7 @@ def create_application(config_filename):
     application = Flask(__name__)
     application.config .from_object('common.settings')
     
-    from app import api_bp
+    from api import api_bp
     application.register_blueprint(api_bp, url_prefix='/api')
 
     return application

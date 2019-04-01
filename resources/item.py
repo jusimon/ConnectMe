@@ -1,10 +1,5 @@
-from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required
-from auth.security import authenticate, identity
-from resources.user import UserRegister, UserTenancy
-import common.settings
-from common.logging_module import get_logger
 
 items = []
 
