@@ -19,6 +19,7 @@ class UserModel:
         try:
             db = pymysql.connect(cfg.MYSQL_HOSTNAME, user=cfg.MYSQL_USERNAME, passwd=cfg.MYSQLDB_PASSWORD, db=cfg.MYSQL_DB_NAME, connect_timeout=5)
         except:
+            logger.error("%s %s %s %s ", cfg.MYSQL_HOSTNAME, cfg.MYSQL_USERNAME, cfg.MYSQLDB_PASSWORD, cfg.MYSQL_DB_NAME)
             logger.error("Error : Unexpected error: Could not connect to MySql instance")
             sys.exit()
         cursor = db.cursor()
@@ -37,6 +38,7 @@ class UserModel:
         try:
             db = pymysql.connect(cfg.MYSQL_HOSTNAME, user=cfg.MYSQL_USERNAME, passwd=cfg.MYSQLDB_PASSWORD, db=cfg.MYSQL_DB_NAME, connect_timeout=5)
         except:
+            logger.error("%s %s %s %s ", cfg.MYSQL_HOSTNAME, cfg.MYSQL_USERNAME, cfg.MYSQLDB_PASSWORD, cfg.MYSQL_DB_NAME)
             logger.error("Error : Unexpected error: Could not connect to MySql instance")
             sys.exit()
         cursor = db.cursor()
