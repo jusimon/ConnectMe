@@ -80,9 +80,11 @@ $("#questionsetform1").submit(function(event) {
     console.log(data);
     var tenancy_id = $.cookie('tenancy_id');
     var created_by = $.cookie('username');
+    var client_email_id = $.cookie('username');
     var updated_by = $.cookie('username');
     data.push({name: "updated_by", value: updated_by})
     data.push({name: "created_by", value: created_by})
+    data.push({name: "client_email_id", value: client_email_id})
     data.push({name: "tenancy_id", value: tenancy_id})
     data.push({name: "poll_or_quiz", value: "Q"})
     data.push({name: "showprogbar", value: "Y"})
@@ -109,13 +111,15 @@ $("#quizform1").submit(function(event) {
     var tenancy_id = $.cookie('tenancy_id');
     var created_by = $.cookie('username');
     var updated_by = $.cookie('username');
+    var client_email_id = $.cookie('username');
     data.push({name: "qset_id", value: QsetId})
     data.push({name: "created_by", value: created_by})
     data.push({name: "tenancy_id", value: tenancy_id})
     data.push({name: "question_type", value: "checkbox"})
     data.push({name: "publish_yn", value: "Y"})
     data.push({name: "updated_by", value: updated_by})
-   
+    data.push({name: "client_email_id", value: client_email_id})
+
     console.log(data);
     var req=$.ajax({
       type: "POST",
@@ -250,6 +254,7 @@ redirectLogin();
 function populateQuizData() {
  var tenancy_id = $.cookie('tenancy_id');
  var created_by = $.cookie('username');
+ var client_email_id = $.cookie('username');
  var querytype = $.cookie('role');
  console.log('tenancy_id');
  console.log('username');
@@ -262,6 +267,7 @@ function populateQuizData() {
     {
       "tenancy_id": tenancy_id,
       "created_by": created_by,
+      "client_email_id": client_email_id,
       "querytype": querytype,
       "qset_id": QsetId
     }
@@ -313,6 +319,7 @@ function populateQsetData()
 {
  var tenancy_id = $.cookie('tenancy_id');
  var created_by = $.cookie('username'); 
+ var client_email_id = $.cookie('username');
  var querytype = $.cookie('role');
  console.log('tenancy_id');
  console.log('username');
@@ -325,6 +332,7 @@ function populateQsetData()
     {
       "tenancy_id": tenancy_id,
       "created_by": created_by,
+      "client_email_id": client_email_id,
       "querytype": querytype
     }
  });
