@@ -155,7 +155,7 @@ console.log(response);
   {
      console.log(' I am in sucess');
 	  
-     var awsCredentials = new AWS.Credentials("key1", "key2");
+     var awsCredentials = new AWS.Credentials("Accesskey", "secretKey");
      var settings = {
        	   awsCredentials: awsCredentials,
            awsRegion: "us-west-1",
@@ -173,6 +173,18 @@ console.log(response);
     	}
 
     	kathy.ForgetCachedSpeech();
+     }
+     if($.cookie('role') == 'client')
+     {
+	 var kathy = ChattyKathy(settings);
+	 welcomeStr = "You are about to start a quiz. You have 20 seconds for every page and 120 seconds for the whole survey questions. Please click on 'Take the quiz' button when you are ready.";
+	 kathy.Speak(welcomeStr);
+
+	 if (kathy.IsSpeaking()) {
+                kathy.ShutUp();
+        }
+
+        kathy.ForgetCachedSpeech();
      }
      return 0;
  }
