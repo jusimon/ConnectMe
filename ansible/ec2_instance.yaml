@@ -1,0 +1,135 @@
+---
+  - name: Provision an EC2 Instance
+    hosts: localhost
+    connection: local
+    gather_facts: False
+    tags: Provisioning
+
+    vars:
+      instance_type: t2.micro
+      security_group: connectme_sg 
+      image: ami-0019ef04ac50be30f
+      region: us-west-1
+      keypair: drifters
+      aws_access_key: 
+      aws_secret_key: 
+      count: 2
+      hosts_file: /tmp/hosts
+
+    tasks:
+
+      - name: Create New security group with below given name
+        local_action:
+          module: ec2_group
+          name: "{{ security_group }}"
+          description: Security Group for Newly Created EC2 Instance
+          region: "{{ region }}"
+          rules:
+            - proto: tcp
+              from_port: 22
+              to_port: 22
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 80
+              to_port: 80
+              cidr_ip: 0.0.0.0/0
+          rules_egress:
+            - proto: all
+              cidr_ip: 0.0.0.0/0
+
+
+      - name: Launch the new t2 micro EC2 Instance
+        local_action: ec2
+                      group={{ security_group }}
+                      instance_type={{ instance_type}}
+                      image={{ image }}
+                      wait=true
+                      region={{ region }}
+                      keypair={{ keypair }}
+                      count={{count}}
+        register: ec2
+
+      - name: Wait for EC2 Instance to Spin-up and ready for SSH access
+        local_action: wait_for
+                      host={{ item.public_ip }}
+                      port=22
+                      state=started
+        with_items: "{{ ec2.instances }}"
+
+      - name: Adding Tags to Identify
+        local_action: ec2_tag resource={{ item.id }} region={{ region }} state=present
+        with_items: "{{ ec2.instances }}"
+        args:
+          tags:
+            Name: ConnectMeApp 
+            Owner: Drifter Group 
+            PurPose: EC2 instances for ConnectMe App
+
+      - name: Add hosts group temporary inventory group with pem path
+        add_host:
+          name: " Dynamic Host IP {{ item.public_ip  }}"
+          groups: dynamic_hosts
+          ansible_host: "{{ item.public_ip  }}"
+          ansible_ssh_private_key_file: "/docker_volumes/aws_key/AWS-Project-202.pem"
+        with_items: "{{ ec2.instances }}"
+
+
+  - hosts: dynamic_hosts
+    become: yes
+    remote_user: ec2-user
+    tasks:
+      - name: Install Nginx
+        command: amazon-linux-extras install -y nginx1.12
+      - name: Restart Nginx after changing the nginx.conf
+        systemd:
+          state: stopped
+          daemon_reload: yes
+          name: nginx
+      - name: Restart Nginx after changing the nginx.conf
+        systemd:
+          state: restarted
+          daemon_reload: yes
+          name: nginx
+      - name: Install GCC Package
+        yum:
+          name: gcc
+          state: present
+      - name: Install openssl  package
+        yum:
+          name: openssl
+          state: present
+      - name: Create Directory to clone github Repo on AWS EC2 instance
+        command: mkdir /opt/connectme
+      - name: Install Git through Yum
+        yum:
+          name: git
+          state: present
+      - name: Cloning ConnectMe repo
+        git:
+          repo: 'https://github.com/jusimon/ConnectMe.git'
+          dest: /opt/connectme/checkout
+      - name: Install Pip
+        command: /usr/bin/easy_install pip
+      - name: Install Dependencies packages for ConnectMe
+        pip: 
+          requirements: /opt/connectme/checkout/requirements.txt
+      - name: Starting application in background
+        shell: cd /opt/connectme/checkout; nohup python application.py  </dev/null >/dev/null 2>&1 & 
+      - name: Stop  Nginx before making any change the nginx.conf
+        systemd:
+          state: stopped
+          daemon_reload: yes
+          name: nginx
+      - name: Setting up NGINX Server - renaming nginx.conf
+        command: mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf_orig
+      - name: Setting up NGINX Server - renaming html
+        command: mv /usr/share/nginx/html /usr/share/nginx/html_orig
+      - name: Setting up NGINX Server - linking nginx.conf
+        command: ln -s /opt/connectme/checkout/templates/nginx/nginx.conf /etc/nginx/nginx.conf
+      - name: Setting up NGINX Server - linking html
+        command: ln -s /opt/connectme/checkout/templates/html /usr/share/nginx/html
+      - name: Restart Nginx after changing the nginx.conf
+        systemd:
+          state: restarted
+          daemon_reload: yes
+          name: nginx
