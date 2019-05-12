@@ -432,11 +432,29 @@ var quiz_question =  {
             questions: [
                 {
                     type: "html",
-                    html: "You are about to start a quiz. <br/>You have 20 seconds for every page and 120 seconds for the whole survey questions.<br/>Please click on <b>'Start Quiz'</b> button when you are ready."
+                    html: "You are about to start a quiz!!!. <br/>You have 20 seconds for every page and 120 seconds for the whole survey questions.<br/>Please click on <b>'Start Quiz'</b> button when you are ready."
                 }
             ]
         };
 
+welcomeStr = "You are about to start a quiz. You have 20 seconds for every page and 120 seconds for the whole survey questions. Please click on 'Start Quiz' button when you are ready.";
+
+var awsCredentials = new AWS.Credentials("key1", "key2");
+    var settings = {
+        awsCredentials: awsCredentials,
+        awsRegion: "us-west-1",
+        pollyVoiceId: "Joanna",
+        cacheSpeech: true
+    }
+
+   var kathy = ChattyKathy(settings);
+   //kathy.Speak("Welcome to take quiz");
+   kathy.Speak(welcomeStr);
+   if (kathy.IsSpeaking()) {
+        kathy.ShutUp();
+    }
+
+    kathy.ForgetCachedSpeech();
 json1.pages.push(quiz_question);
 console.log(quiz_question);
 console.log(json1);
@@ -509,7 +527,7 @@ for (index = 0; index < quiz_questions.length; ++index) {
  }
   console.log(corect_answer);
   quiz_name= quiz_questions[index].question;
-  
+
 quiz_question1 = {
     questions: [
       {
@@ -521,8 +539,28 @@ quiz_question1 = {
       }
      ]
 };
+
 json1.pages.push(quiz_question1);
 console.log(quiz_question1);
+/*
+kathy.Speak(quiz_name);
+   if (kathy.IsSpeaking()) {
+        kathy.ShutUp();
+    }
+    kathy.ForgetCachedSpeech();
+*/
+i =0;
+while(i < 50000)
+{
+/*
+$(document).on('click', function(evt) {
+break
+});
+*/
+  i++;
+}
+
+
 console.log(json1);
 choice_arr = [];
 }

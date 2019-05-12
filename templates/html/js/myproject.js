@@ -151,15 +151,35 @@ function redirectLogin()
 function chkResponse(response)
 {
 console.log(response);
-if (response['status']==200 && response['statusText']=='OK')
- {
-          console.log(' I am in sucess');
-	  return 0;
+  if (response['status']==200 && response['statusText']=='OK')
+  {
+     console.log(' I am in sucess');
+	  
+     var awsCredentials = new AWS.Credentials("key1", "key2");
+     var settings = {
+       	   awsCredentials: awsCredentials,
+           awsRegion: "us-west-1",
+           pollyVoiceId: "Joanna",
+           cacheSpeech: true
+     }
+
+     if ($.cookie('role') != 'client' && $.cookie('role') != 'recruiter')
+     {
+    	var kathy = ChattyKathy(settings);
+    	kathy.Speak("Welcome to myprojects. Myprojects has four categories such as Manage Questioner, Publish Questioner, Manage Results and administartion. Question sets and question categories can be created using manage Questioner tab. Publish questioner is used to publish the question set as well as invite the clients. Results for each client can be viewed by using Mange Results tab. Administartion tab has access to all admin Rights.");
+	
+    	if (kathy.IsSpeaking()) {
+        	kathy.ShutUp();
+    	}
+
+    	kathy.ForgetCachedSpeech();
+     }
+     return 0;
  }
  else
-  {
+ {
 	redirectLogin();
-  }
+ }
 redirectLogin();
 }
 
@@ -284,10 +304,13 @@ var quiz_question =  {
             questions: [
                 {
                     type: "html",
-                    html: "You are about to start a quiz. <br/>You have 20 seconds for every page and 120 seconds for the whole survey questions.<br/>Please click on <b>'Start Quiz'</b> button when you are ready."
+                    html: "You are about to start a quiz!.!.!. <br/>You have 20 seconds for every page and 120 seconds for the whole survey questions.<br/>Please click on <b>'Start Quiz'</b> button when you are ready."
                 }
             ]
         };
+
+
+
 
 json1.pages.push(quiz_question);
 console.log(quiz_question);

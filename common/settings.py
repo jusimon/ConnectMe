@@ -1,4 +1,6 @@
 import os
+import time  
+from datetime import datetime, date, time, timedelta  
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 SECRET_KEY = os.environ.get('SECRET_KEY') or 'SuperSecretKeys'
@@ -9,6 +11,7 @@ MYSQL_USERNAME = os.environ.get('MYSQL_USERNAME') or 'ConnectMe'
 MYSQL_DB_NAME = os.environ.get('MYSQL_DB_NAME') or 'mysql-prod'
 MYSQLDB_PASSWORD = os.environ.get('MYSQLDB_PASSWORD') or 'welcome1'
 MYSQL_PORT = int(os.environ.get('MYSQL_PORT','3306'))
+JWT_EXPIRATION_DELTA = timedelta(seconds=1800)
 DEBUG = True
 
 if not MYSQL_HOSTNAME:
