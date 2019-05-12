@@ -478,8 +478,9 @@ class QuizQuestion(Resource):
             print(args)
             cursor.execute(query,args)
         elif data['querytype'].lower() == 'client':
-            query = "select qset_title,email_sent,client_email_id,invite_qset_status,a.created_by,invite_id from `eba_quiz_invites` as b,`eba_quiz_question_sets` as a where a.`qset_id`=b.`qset_id` and b.`client_email_id`='sandhya@email.com'"
-            argument1 = data['client_email_id']
+            print("!!!!!Debug!!!! " + data['created_by'])
+            query = "select qset_title,email_sent,client_email_id,invite_qset_status,a.created_by,invite_id from `eba_quiz_invites` as b,`eba_quiz_question_sets` as a where a.`qset_id`=b.`qset_id` and b.`client_email_id`=%s"
+            argument1 = data['created_by']
             args = (argument1)
             print(args)
             cursor.execute(query,args)
