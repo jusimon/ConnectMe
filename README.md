@@ -1,4 +1,4 @@
-# CPME – 281 - PROJECT 2  - ConnectMe
+# CPME – 282 - ConnectMe
 Introduction  
 Project : ConnectMe  
 University Name: http://www.sjsu.edu/  
@@ -14,7 +14,7 @@ Viswa Kambam
 
 Githublink: https://github.com/jusimon/ConnectMe
 
-Project Problem Statement:
+## Project Problem Statement:  
 Often we see that hiring the right candidate for a job require is too complicated process this is happens because of various reasons like unstructured interviews process, inefficient resume screenings and pre-interview calls. Recruitment professionals and hiring managers often pick candidates dependent on abstract, instead of employment related, criteria.  
 Recruitment Management tool is important to have a state of art recruitment system that assists the companies in initial screening of the candidates based on the profiles provided by the different companies.    
 This tool will provide a list of trusted resources that has in depth knowledge about the technical skills that companies are actually looking forward to and at the same time initial screening of the candidates will be done based on the inputs/questionnaires provided by the company.    
@@ -23,7 +23,7 @@ Proposed Solution/Project Idea:
 Our easy-to-use pre-employment tests improve the new-hire screening process by identifying the most qualified candidates that accurately represent themselves. Leveraging the AWS cloud services, we have implemented our application to be highly available and scalable solution.  
 
 It's a smart to utilize an structured interview that can alleviate the risk bad hiring of a resource. However, that choice must incorporate different types of assessments. By keeping the face to face interview as a final step in hiring process and evaluate initially based on online tests for various subjects/technologies, can improve candidate sourcing, interviewing and applicant tracking for a streamlined hiring process.
-Features List 
+## Features List 
 1.	Applicants register under our portal which enables them to take the test. A new user record is created in RDS. If an already existing user tries to sign up, he is displayed alert message “Already Registered”.
 2.	Username and password are validated and Authorized users can only successfully login which will be indicated by alert message. 
 3.	We have role based login which controls the access to different pages.
@@ -55,30 +55,17 @@ Features List
 
 
 
-Architecture Diagram
- 
+## Architecture Diagram
+ ![architecture diagram](https://user-images.githubusercontent.com/42687217/57663128-8dc50b80-75a7-11e9-9e20-50d40aacce2d.png)
+
+## UML diagram:
+ ![uml](https://user-images.githubusercontent.com/42687217/57663116-7f76ef80-75a7-11e9-8b0d-e22541960a6b.png)
 
 
+## Instance Provisioning Sequence Diagram:  
+![Ansible Seq Diagram](https://user-images.githubusercontent.com/42687217/57663069-43dc2580-75a7-11e9-87df-33e0fa838991.jpg)
 
-
-
-
-
-
-UML diagram:
- 
-
-
-
-
- 
-
-
-
-
-
-
-
+![Ansible_Architecture](https://user-images.githubusercontent.com/42687217/57663204-e5637700-75a7-11e9-993b-ad78a7b14298.png)
 
 
 Application Screenshots
@@ -191,13 +178,10 @@ Resources to be configured on AWS:
 1.	EC2, Auto Scale Group, 
 2.	ELB
 3.	Route 53
-4.	S3, IA, Glacier
-5.	Amazon Machine Learning
-6.	RDS
-7.	Lambda 
-8.	CloudWatch
-9.	CloudTrail
-10.	SNS
+4. Polly
+5.	CloudWatch
+6.	CloudTrail
+7.	SNS
 Softwares to download locally:
 1.	Server Side: Python, Flask, AWS Python SDK, 
 2.	Client Side: HTML5, CSS,Ajax, Bootstrap, Java Script
@@ -243,11 +227,10 @@ Githublink: https://github.com/jusimon/ConnectMe
 
 Individual contribution breakdown
 Html Pages (Home Page, Registration page, Login Page), JWT token management, CI/CD pipeline, SNS and CloudWatch, Architecture diagram , testing, documentation,PPT - Sandhya  
-Ajax Call and Java Script ,Machine Learning ,RDS,Use Case Diagram - Viswa Kambam  
-Rest and python code, DB handling, Autoscaling and HTTPS - Paramdeep Saini and Julian Simon  
+Ajax Call and Java Script ,Machine Learning ,RDS,Use Case Diagram,Polly- Viswa Kambam  
+Rest and python code, DB handling, Autoscaling and HTTPS , Infrastructure Provisioning - Paramdeep Saini and Julian Simon  
 Nginx and uwsgi setup, DB handling, CI/CD Pipeline, CloudTrail- Paramdeep Saini and Julian Simon  
 
-CI/CD Pipeline:
 
 
 
